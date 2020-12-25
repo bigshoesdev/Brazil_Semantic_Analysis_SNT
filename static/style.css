@@ -1,0 +1,120 @@
+.card {
+    min-height: 95vh !important;
+}
+
+.modal {
+    font-size: 13px !important;
+}
+
+.main-table {
+    counter-reset: rowNumber;
+    border: 1px solid #dee2e6 !important;
+}
+
+
+.main-table tbody tr::before {
+    display: table-cell;
+    counter-increment: rowNumber;
+    content: counter(rowNumber);
+    padding-right: 0.3em;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.main-table td, .table th {
+    vertical-align: middle;
+    font-size: 12px
+}
+
+.main-table td p {
+    font-size: 12px;
+}
+
+.main-table thead th {
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 100;
+    box-shadow: 0 0 0 1px #dee2e6;
+}
+
+.main-table td {
+    padding: 5px;
+}
+
+.table-responsive {
+    max-height: 65vh !important;
+    overflow-y: scroll;
+}
+
+.link-api {
+    color: #fff;
+    text-decoration: none;
+}
+
+.link-api.disabled {
+    pointer-events: none;
+}
+
+.link-api:hover {
+    color: #fff;
+    text-decoration: none;
+}
+
+.badge {
+    width: 3.5vw;
+    font-size: 9px;
+}
+
+.retry {
+    font-size: 10px !important;
+    width: 4vw
+}
+
+.edition {
+    font-size: 10px !important;
+    width: 4vw
+}
+
+.deletion {
+    font-size: 10px !important;
+    width: 4vw
+}
+
+.dashboard-title {
+    font-family: 'Freestyle Script', serif;
+    font-size: 3.5rem;
+    font-weight: bold;
+}
+
+.custom-link {
+    text-decoration: none;
+    color: #fff
+}
+
+#addModal, #editModal {
+    padding: 0 !important;
+}
+
+.swal-modal {
+    margin-top: 10vh !important;
+    vertical-align: top !important;
+}
+
+@media screen and (min-width: 768px) {
+    .modal-dialog {
+        min-width: 400px;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    .modal-dialog {
+        min-width: 800px;
+    }
+}
+
+.api-button {
+    font-size: 9px;
+    padding: 0.2rem !important;
+    width: 5vw;
+}

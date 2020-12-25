@@ -1,0 +1,14 @@
+scrapping/__pycache__/
+scrapping/utils/__pycache__/
+resources/__pycache__/
+__pycache__/
+topic_modeling/data/*.*
+sentiment_analysis/runs/
+sentiment_analysis/data/train/
+sentiment_analysis/data/test/
+sentiment_analysis/__pycache__/
+sentiment_analysis/*.pyc
+data/*.json
+*.log
+venv
+.idea

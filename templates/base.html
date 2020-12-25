@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scopo Deep - {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment.min.js"></script>
+</head>
+
+<body>
+<div class="container-fluid mt-4 mb-4">
+    <div class="card text-muted border-info">
+        <div class="card-header bg-info text-white mb-3">
+            <h5 class="mt-1" style="display: inline-block;align-items: center">SCOPO DEEP</h5>
+            <a class="custom-link" href="/logout">
+                <button class="btn btn-outline-warning float-right pt-1 pb-1 ml-2">Logout</button>
+            </a>
+            <a class="custom-link" href="/user">
+                <button class="btn btn-outline-warning float-right pt-1 pb-1 ml-2" id="user">User Management</button>
+            </a>
+            <a class="custom-link" href="/dashboard">
+                <button class="btn btn-outline-warning float-right pt-1 pb-1" id="dashboard">Dashboard</button>
+            </a>
+        </div>
+        {% block content %}{% endblock %}
+        <div class="card-footer text-muted small">
+            <strong>Scopo Deep 2020</strong>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

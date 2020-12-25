@@ -1,0 +1,234 @@
+{% extends 'base.html' %}
+
+{% block title %}Users{% endblock %}
+
+{% block content %}
+    <div class="card-body">
+        <div class="modal fade" id="addUserModal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Add New User</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body offset-lg-1 col-lg-10">
+                        <form id="addUserForm">
+                            <div class="form-group row">
+                                <label for="userIdLabel" class="col-sm-2 col-form-label">Name</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="name" id="userName"
+                                           placeholder="User Name"
+                                           required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="userIdLabel" class="col-sm-2 col-form-label">Password</label>
+                                <div class="col-sm-10">
+                                    <input type="password" class="form-control" name="password" id="userPass"
+                                           placeholder="Password"
+                                           required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="offset-8 col-sm-4">
+                                    <button type="button" style="font-size: 13px" class="btn btn-secondary mr-3" data-dismiss="modal">
+                                        Close
+                                    </button>
+                                    <button type="submit" style="font-size: 13px;" class="btn btn-primary" id="btnUserSave">Save Changes
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="editUserModal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Edit User</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body offset-lg-1 col-lg-10">
+                        <form id="editUserForm">
+                            <div class="form-group row">
+                                <label for="userIdLabel" class="col-sm-2 col-form-label">Name</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="name" id="editUserName"
+                                           placeholder="User Name">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="userIdLabel" class="col-sm-2 col-form-label">Password</label>
+                                <div class="col-sm-10">
+                                    <input type="password" class="form-control" name="password" id="editUserPass"
+                                           placeholder="Password">
+                                </div>
+                            </div>
+                           <div class="form-group row">
+                                <div class="offset-7 col-sm-5">
+                                    <button type="button" style="font-size: 13px" class="btn btn-secondary mr-3" data-dismiss="modal">
+                                        Close
+                                    </button>
+                                    <button type="submit" style="font-size: 13px" class="btn btn-primary" id="btnSave">Save Changes
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h1 class="card-title dashboard-title text-center text-info">USER MANAGEMENT</h1>
+        <div class="mb-4">
+            <button class="btn btn-success" style="font-size: 13px" data-toggle="modal" data-target="#addUserModal">Add User</button>
+            <button class="btn btn-info" style="font-size: 13px" onclick="location.reload()">Refresh Page</button>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered table-striped text-center">
+                <thead style="font-size: smaller">
+                <tr>
+                    <th scope="col">NAME</th>
+                    <th scope="col">EDIT</th>
+                    <th scope="col">DELETE</th>
+                </tr>
+                </thead>
+                <tbody id="userTbl" style="font-size: small">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            const editUserName = $('#editUserName');
+
+            $('#user').addClass('active');
+
+            function getData(callback) {
+                $.ajax({
+                    url: '/thread/api/v1.0/user',
+                    type: "GET",
+                    contentType: 'text/html; charset=utf-8',
+                }).done(function (data) {
+                    callback(data)
+                });
+            }
+
+            $("#addUserForm").submit(function (e) {
+                e.preventDefault();
+                let fData = {};
+
+                $(this).serializeArray().map(function (item) {
+                    if (fData[item.name]) {
+                        if (typeof (fData[item.name]) === "string") {
+                            fData[item.name] = [fData[item.name]];
+                        }
+                        fData[item.name].push(item.value);
+                    } else {
+                        fData[item.name] = item.value;
+                    }
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: '/thread/api/v1.0/addUser',
+                    contentType: 'application/json',
+                    dataType: "json",
+                    data: JSON.stringify(fData)
+                }).done(function () {
+                    $('#userTbl').empty();
+                    getData((data) => showTableData(data));
+                });
+
+                $('#addUserModal').modal('hide');
+                $(this)[0].reset();
+            });
+
+            $("#editUserForm").submit(function (e) {
+                e.preventDefault();
+                let fData = {};
+                let dataId = editUserName.data('id');
+
+                $(this).serializeArray().map(function (item) {
+                    if (fData[item.name]) {
+                        if (typeof (fData[item.name]) === "string") {
+                            fData[item.name] = [fData[item.name]];
+                        }
+                        fData[item.name].push(item.value);
+                    } else {
+                        fData[item.name] = item.value;
+                    }
+                });
+
+                $.ajax({
+                    url: '/thread/api/v1.0/updateUser',
+                    type: "PUT",
+                    contentType: 'application/json',
+                    dataType: "json",
+                    data: JSON.stringify({
+                        id: dataId,
+                        update: fData
+                    })
+                }).done(function () {
+                    $('#userTbl').empty();
+                    getData((data) => showTableData(data));
+                });
+
+                $('#editUserModal').modal('hide');
+                $(this)[0].reset();
+            });
+
+            $("#userTbl").on("click", ".edition", (e) => {
+                const {id} = e.target;
+                const item = $('#' + id).data('item');
+
+                $('#editUserModal').modal('show');
+                editUserName.data('id', id);
+                editUserName.val(item.name);
+            });
+
+            $("#userTbl").on("click", ".deletion", (e) => {
+                const {id} = e.target;
+                const _id = id.toString().split('_')[1];
+
+                $.ajax({
+                    url: '/thread/api/v1.0/deleteUser',
+                    type: "DELETE",
+                    contentType: 'application/json',
+                    dataType: "json",
+                    data: JSON.stringify({
+                        id: _id,
+                    })
+                }).done(function () {
+                    $('#userTbl').empty();
+                    getData((data) => showTableData(data));
+                });
+            });
+
+            function showEdition(item) {
+                return '<button class="btn btn-primary pt-1 pb-1 mb-1 edition" id="' + item._id.$oid + '" data-item=' + JSON.stringify(item) + '>Edit</button>'
+            }
+
+            function showDeletion(item) {
+                return '<button class="btn btn-primary pt-1 pb-1 mb-1 deletion" id="delete_' + item._id.$oid + '" data-item=' + JSON.stringify(item) + '>Delete</button>'
+            }
+
+            function showTableData(data) {
+                let result = JSON.parse(data);
+                let table_data = result.map((item) => {
+                    return ('<tr>\n' +
+                        '<td>' + item.name + '</td>\n' +
+                        '<td>\n' + showEdition(item) + '</td>\n' +
+                        '<td>\n' + showDeletion(item) + '</td>\n' +
+                        '</tr>\n'
+                    )
+                });
+
+                $('#userTbl').append(table_data)
+            }
+
+            getData((data) => showTableData(data));
+        })
+    </script>
+{% endblock %}
